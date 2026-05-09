@@ -1,0 +1,91 @@
+{
+  "name": "sworde",
+  "version": "0.0.1",
+  "description": "Open source Claude desktop. Bring your own key.",
+  "main": "./out/main/index.js",
+  "author": "Aditya Swaroop",
+  "license": "MIT",
+  "homepage": "https://github.com/adityaswaroop823/sworde",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adityaswaroop823/sworde.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adityaswaroop823/sworde/issues"
+  },
+  "keywords": [
+    "claude",
+    "anthropic",
+    "claude-code",
+    "electron",
+    "desktop",
+    "ai",
+    "agent-sdk",
+    "open-source"
+  ],
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "build:mac": "electron-vite build && electron-builder --mac",
+    "build:win": "electron-vite build && electron-builder --win",
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.131",
+    "clsx": "^2.1.1",
+    "electron-store": "^8.2.0",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
+    "shiki": "^1.24.0",
+    "tailwind-merge": "^2.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.17",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^2.3.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11"
+  },
+  "build": {
+    "appId": "dev.sworde.app",
+    "productName": "Sworde",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**/*",
+      "resources/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    }
+  }
+}
