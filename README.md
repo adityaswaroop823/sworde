@@ -1,100 +1,100 @@
+<div align="center">
+
 # Sworde
 
-> Open source Claude desktop. Sign in with your Claude subscription.
-> Your data stays local.
+**Open-source desktop client for Claude.**
+Sign in with your Claude subscription. Your data stays local.
 
-Sworde is a beautiful desktop client built on top of Anthropic's official
-**Claude Agent SDK**. It uses the same authentication as Claude Code — so if
-you've run `claude login` once, sworde just works with your existing Pro / Max
-subscription. No extra billing, no API key paste, nothing.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Built with Electron](https://img.shields.io/badge/Built%20with-Electron-47848f.svg?logo=electron&logoColor=white)](https://www.electronjs.org/)
+[![Built with React](https://img.shields.io/badge/React-18-61dafb.svg?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/adityaswaroop823/sworde/pulls)
 
-Falling back to a pay-per-use API key is supported too.
+</div>
 
-**Status:** Day 1 — auth + streaming chat working end-to-end. Skills, MCP,
-hooks, tool-use rendering, and conversation persistence land over the next two
-weeks.
+---
 
-## How auth works
+Sworde is a native desktop client for Anthropic's Claude, built on the official
+[Claude Agent SDK](https://docs.anthropic.com/claude/docs/claude-agent-sdk).
+It uses the same authentication as Claude Code — if you've run `claude login`
+once, Sworde just works with your existing Pro / Max subscription. No extra
+billing, no API key paste.
 
-When sworde launches it probes the Agent SDK:
+A pay-per-use API key is also supported as a fallback.
 
-1. **Found a `claude login` session?** → Use it. You're paying through your
-   Claude subscription. Done.
-2. **Found a saved API key?** → Use it. Anthropic bills you per token.
-3. **Neither?** → Show a one-screen onboarding with two buttons:
-   - **Sign in with Claude** — opens Terminal so you can run `claude login`,
-     then click "Recheck — I just signed in"
-   - **Use an API key** — paste once, stored locally (and only locally)
+## Features
 
-Sworde never sees, stores, or transmits credentials anywhere except directly to
-Anthropic.
+- **Sign in with your Claude subscription** — auto-detects your `claude login` session
+- **API key fallback** — paste once, stored locally, never transmitted anywhere except Anthropic
+- **Streaming responses** with markdown + Shiki syntax highlighting
+- **Multi-chat sidebar** with searchable conversation history
+- **Tool-use rendering** for Read / Edit / Bash / Grep / Glob (inline cards)
+- **MCP server support** — bring your own tools
+- **Subagents, hooks, plan mode** — everything the Agent SDK supports
+- **Image and PDF input**, web fetch / search
+- **Auto-compaction** for long sessions
+- **100% local** — credentials, conversations, and config never leave your device
 
-## Stack
+## Installation
 
-- Electron + electron-vite
-- React 18 + TypeScript
-- Tailwind CSS (claude.ai-inspired warm cream palette)
-- `@anthropic-ai/claude-agent-sdk` — same SDK Claude Code uses
-- `electron-store` for local config
+### Download
 
-## Get started
+Pre-built installers for macOS, Windows, and Linux are available on the
+[Releases](https://github.com/adityaswaroop823/sworde/releases) page.
 
-You'll need:
-
-- Node 18+
-- Either a `claude` CLI logged in, or an Anthropic API key
+### Build from source
 
 ```bash
-cd ~/sworde
+git clone https://github.com/adityaswaroop823/sworde.git
+cd sworde
 npm install
 npm run dev
 ```
 
-## Build for distribution
+To produce platform installers:
 
 ```bash
-npm run build:mac     # produces a .dmg in release/
-npm run build:win     # produces a Windows installer
-npm run build:linux   # produces an AppImage
+npm run build:mac     # .dmg
+npm run build:win     # NSIS installer
+npm run build:linux   # AppImage
 ```
 
-## What you get out of the box
+## Usage
 
-Because sworde rides on the Claude Agent SDK, it inherits everything Claude
-Code can do:
+On first launch, Sworde probes for credentials in this order:
 
-- File read / write / edit
-- Bash execution with permission prompts
-- Grep / Glob / file search
-- MCP server support
-- Subagents (Agent tool)
-- Hooks
-- Streaming responses
-- Image / PDF reading
-- Web fetch / search
-- Auto-compaction on long sessions
+1. **Existing `claude login` session** → uses your Claude subscription
+2. **Saved API key** → uses pay-per-use Anthropic API
+3. **Neither** → onboarding screen with two options:
+   - **Sign in with Claude** — opens Terminal so you can run `claude login`
+   - **Use an API key** — paste once, stored locally
 
-The work in sworde is the **shell** — turning that engine into a native
-desktop experience with proper Cmd+A/Cmd+C, markdown rendering, drag-drop,
-multi-chat sidebar, and a calm visual design.
+Once authenticated, just type. Slash commands, file drag-drop, and tool
+permission prompts work out of the box.
 
-## Roadmap
+## Tech stack
 
-- [x] Day 1 — Electron shell, auth probe, claude.ai vibe, streaming chat
-- [ ] Day 2 — Conversation persistence (sqlite), session restore
-- [ ] Day 3 — Tool-use rendering (Read/Edit/Bash inline cards with diffs)
-- [ ] Day 4 — Skills loader (`~/.sworde/skills/` and `~/.claude/skills/`)
-- [ ] Day 5 — MCP server orchestration UI
-- [ ] Day 6 — Permission prompts UI (per-tool / per-bash)
-- [ ] Day 7 — Settings panel, working directory picker, model picker
-- [ ] Day 8 — Markdown polish (shiki syntax highlight, mermaid diagrams)
-- [ ] Day 9 — Drag-drop files into chat
-- [ ] Day 10 — Hooks system + visible activity feed
-- [ ] Day 11 — Plan mode UX
-- [ ] Day 12 — Mac code signing + notarization
-- [ ] Day 13 — Landing page (sworde.dev)
-- [ ] Day 14 — Demo video, screenshots, README polish
-- [ ] Day 15 — Launch (Show HN, Twitter, IndieHackers, r/ClaudeAI)
+- [Electron](https://www.electronjs.org/) + [electron-vite](https://electron-vite.org/)
+- [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [`@anthropic-ai/claude-agent-sdk`](https://www.npmjs.com/package/@anthropic-ai/claude-agent-sdk)
+- [`electron-store`](https://github.com/sindresorhus/electron-store) for local config
+- [Shiki](https://shiki.style/) for syntax highlighting
+
+## Contributing
+
+Contributions are welcome. Open an [issue](https://github.com/adityaswaroop823/sworde/issues)
+to discuss bigger changes first; small fixes can go straight to a PR.
+
+```bash
+git clone https://github.com/adityaswaroop823/sworde.git
+cd sworde
+npm install
+npm run dev
+```
+
+Make sure `npm run typecheck` passes before pushing.
 
 ## Disclaimer
 
@@ -107,4 +107,4 @@ would. The Agent SDK is proprietary and governed by
 
 ## License
 
-MIT
+[MIT](LICENSE) © Aditya Swaroop
