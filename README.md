@@ -11,6 +11,10 @@ Sign in with your Claude subscription. Your data stays local.
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/adityaswaroop823/sworde/pulls)
 
+<br />
+
+![Sworde — home screen](screenshots/home.png)
+
 </div>
 
 ---
@@ -36,42 +40,63 @@ A pay-per-use API key is also supported as a fallback.
 - **Auto-compaction** for long sessions
 - **100% local** — credentials, conversations, and config never leave your device
 
-## Installation
+## Getting started
 
-### Download
+### Prerequisites
 
-Pre-built installers for macOS, Windows, and Linux are available on the
-[Releases](https://github.com/adityaswaroop823/sworde/releases) page.
+- **Node.js 18+** — [download](https://nodejs.org/)
+- **One of:**
+  - An active `claude login` session ([install Claude Code](https://docs.anthropic.com/claude/docs/claude-code) and run `claude login`), or
+  - An [Anthropic API key](https://console.anthropic.com/settings/keys)
 
-### Build from source
+### Option 1 — Pre-built installer (easiest)
+
+Grab the right installer for your OS from the
+[Releases](https://github.com/adityaswaroop823/sworde/releases) page:
+
+| Platform | File |
+| --- | --- |
+| macOS    | `Sworde-x.y.z.dmg` — open and drag into Applications |
+| Windows  | `Sworde-Setup-x.y.z.exe` — run the installer |
+| Linux    | `Sworde-x.y.z.AppImage` — `chmod +x` then double-click |
+
+### Option 2 — Build from source
 
 ```bash
+# 1. Clone the repo
 git clone https://github.com/adityaswaroop823/sworde.git
 cd sworde
+
+# 2. Install dependencies
 npm install
+
+# 3. Run in dev mode (hot-reload)
 npm run dev
 ```
 
-To produce platform installers:
+To produce a distributable installer:
 
 ```bash
-npm run build:mac     # .dmg
-npm run build:win     # NSIS installer
-npm run build:linux   # AppImage
+npm run build:mac     # .dmg → release/
+npm run build:win     # NSIS installer → release/
+npm run build:linux   # AppImage → release/
 ```
 
-## Usage
+### First launch
 
-On first launch, Sworde probes for credentials in this order:
+On startup, Sworde probes for credentials in this order:
 
-1. **Existing `claude login` session** → uses your Claude subscription
-2. **Saved API key** → uses pay-per-use Anthropic API
-3. **Neither** → onboarding screen with two options:
-   - **Sign in with Claude** — opens Terminal so you can run `claude login`
-   - **Use an API key** — paste once, stored locally
+1. **Existing `claude login` session** → uses your Claude Pro / Max subscription. Done.
+2. **Saved API key** → uses pay-per-use Anthropic API.
+3. **Neither** → onboarding screen with two buttons:
+   - **Sign in with Claude** — opens Terminal so you can run `claude login`, then click *"Recheck — I just signed in"*
+   - **Use an API key** — paste once, stored locally on your device
 
-Once authenticated, just type. Slash commands, file drag-drop, and tool
-permission prompts work out of the box.
+Once authenticated, just type. Press `/` to open the slash palette, drag files
+into the chat, and tool-permission prompts will surface inline as needed.
+
+> **Tip:** set your working directory in **Settings** — Sworde will use it as
+> the cwd for any file/shell tools the agent runs.
 
 ## Tech stack
 
