@@ -1,0 +1,40 @@
+{
+  "name": "sworde",
+  "version": "0.1.0",
+  "description": "Open-source Claude desktop client. Sign in with your Claude Pro/Max subscription. One-command install for macOS and Windows.",
+  "keywords": [
+    "claude",
+    "anthropic",
+    "ai",
+    "llm",
+    "desktop",
+    "electron",
+    "agent"
+  ],
+  "author": "Aditya Swaroop",
+  "license": "MIT",
+  "homepage": "https://github.com/adityaswaroop823/sworde",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adityaswaroop823/sworde.git",
+    "directory": "sworde-cli"
+  },
+  "bugs": {
+    "url": "https://github.com/adityaswaroop823/sworde/issues"
+  },
+  "bin": {
+    "sworde": "./bin/sworde.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "os": [
+    "darwin",
+    "win32"
+  ]
+}
