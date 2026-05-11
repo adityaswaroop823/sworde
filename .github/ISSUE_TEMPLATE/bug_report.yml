@@ -1,0 +1,91 @@
+name: 🐛 Bug report
+description: Something in Sworde isn't working as expected
+title: "[bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. The more detail the better — please fill in every field that applies.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One-line description of the bug.
+      placeholder: "Auto-login doesn't pick up my claude session on macOS"
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps that reliably reproduce the issue.
+      placeholder: |
+        1. Launch Sworde from `/Applications`
+        2. Wait for auth probe
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      placeholder: "Sworde should auto-detect my `claude login` session and open the workspace."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      placeholder: "Onboarding screen appears asking me to sign in, even though `claude login` works in Terminal."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Windows (x64)
+        - Windows (arm64)
+        - Linux
+    validations:
+      required: true
+
+  - type: input
+    id: sworde-version
+    attributes:
+      label: Sworde version
+      description: Find this in Settings, or use `npm list -g swordeapp`.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: os-version
+    attributes:
+      label: OS version
+      placeholder: "macOS 14.6 / Windows 11 23H2 / Ubuntu 22.04"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Paste any relevant output from `~/.sworde/auth-debug.log` or the Electron devtools console.
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I searched [existing issues](https://github.com/adityaswaroop823/sworde/issues) and didn't find a duplicate.
+          required: true
+        - label: I'm running the latest [release](https://github.com/adityaswaroop823/sworde/releases).
+          required: true

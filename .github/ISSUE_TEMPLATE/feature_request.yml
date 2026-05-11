@@ -1,0 +1,47 @@
+name: ✨ Feature request
+description: Suggest an idea or improvement for Sworde
+title: "[feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion! For larger features, please open an issue first so we can discuss approach before any code is written.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem are you trying to solve, or what's missing?
+      placeholder: "When I have 50+ conversations in the sidebar, I can't find old ones quickly because there's no search."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like Sworde to behave?
+      placeholder: "Add a search input at the top of the sidebar that filters conversations by title and content."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you thought about and why this one is better.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Mockups, screenshots, similar implementations in other apps, etc.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I searched [existing issues](https://github.com/adityaswaroop823/sworde/issues) and this hasn't been proposed before.
+          required: true
