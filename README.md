@@ -5,6 +5,8 @@
 **Open-source desktop client for Claude.**
 Sign in with your Claude subscription. Your data stays local.
 
+[![npm](https://img.shields.io/npm/v/swordeapp.svg?logo=npm&color=cb3837)](https://www.npmjs.com/package/swordeapp)
+[![Downloads](https://img.shields.io/github/downloads/adityaswaroop823/sworde/total.svg?logo=github)](https://github.com/adityaswaroop823/sworde/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Built with Electron](https://img.shields.io/badge/Built%20with-Electron-47848f.svg?logo=electron&logoColor=white)](https://www.electronjs.org/)
 [![Built with React](https://img.shields.io/badge/React-18-61dafb.svg?logo=react&logoColor=white)](https://react.dev/)
@@ -31,6 +33,7 @@ A pay-per-use API key is also supported as a fallback.
 
 - **Sign in with your Claude subscription** — auto-detects your `claude login` session
 - **API key fallback** — paste once, stored locally, never transmitted anywhere except Anthropic
+- **Trending AI news ticker** — slow-scrolling marquee at the top of the workspace surfaces the most-upvoted AI/LLM stories from HackerNews (refreshed every 10 min, click to open in browser)
 - **Streaming responses** with markdown + Shiki syntax highlighting
 - **Multi-chat sidebar** with searchable conversation history
 - **Tool-use rendering** for Read / Edit / Bash / Grep / Glob (inline cards)
@@ -44,23 +47,39 @@ A pay-per-use API key is also supported as a fallback.
 
 ### Prerequisites
 
-- **Node.js 18+** — [download](https://nodejs.org/)
 - **One of:**
   - An active `claude login` session ([install Claude Code](https://docs.anthropic.com/claude/docs/claude-code) and run `claude login`), or
   - An [Anthropic API key](https://console.anthropic.com/settings/keys)
 
-### Option 1 — Pre-built installer (easiest)
+### Option 1 — npm (one command, macOS + Windows)
 
-Grab the right installer for your OS from the
-[Releases](https://github.com/adityaswaroop823/sworde/releases) page:
+If you have Node.js 18+ installed:
+
+```bash
+npm install -g swordeapp
+sworde
+```
+
+The launcher fetches the right installer for your platform from the latest
+[GitHub Release](https://github.com/adityaswaroop823/sworde/releases/latest)
+on first run, caches it, and then just launches the app on subsequent runs.
+
+### Option 2 — Pre-built installer (direct download)
+
+Grab the right installer from the
+[Releases](https://github.com/adityaswaroop823/sworde/releases/latest) page:
 
 | Platform | File |
 | --- | --- |
-| macOS    | `Sworde-x.y.z.dmg` — open and drag into Applications |
-| Windows  | `Sworde-Setup-x.y.z.exe` — run the installer |
-| Linux    | `Sworde-x.y.z.AppImage` — `chmod +x` then double-click |
+| **macOS** (Apple Silicon) | `Sworde-x.y.z-mac-arm64.dmg` — open and drag into Applications |
+| **Windows** (x64 / most PCs) | `Sworde-Setup-x.y.z-win-x64.exe` — run the installer |
+| **Windows** (arm64 / Surface Pro X) | `Sworde-Setup-x.y.z-win-arm64.exe` — run the installer |
 
-### Option 2 — Build from source
+The builds are not yet signed/notarized. macOS will warn on first launch —
+right-click `Sworde.app` → **Open** → confirm. Windows SmartScreen will warn —
+click **More info** → **Run anyway**.
+
+### Option 3 — Build from source
 
 ```bash
 # 1. Clone the repo
