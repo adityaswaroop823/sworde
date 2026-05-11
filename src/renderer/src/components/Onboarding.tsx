@@ -79,7 +79,7 @@ export default function Onboarding({ onComplete }: { onComplete: () => void }) {
           {step === 'login_required' && (
             <div className="space-y-2">
               <button
-                onClick={() => window.sworde.shell.openTerminalAtHome()}
+                onClick={() => window.sworde.shell.runClaudeLogin()}
                 className="w-full text-left rounded-plate bg-obsidian-200 border border-edge hover:border-ember-500/50 hover:bg-obsidian-100 px-4 py-3.5 transition group"
               >
                 <div className="flex items-start gap-3">

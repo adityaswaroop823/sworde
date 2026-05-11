@@ -93,7 +93,8 @@ const api = {
   },
   shell: {
     openExternal: (url: string) => ipcRenderer.invoke('shell:openExternal', url),
-    openTerminalAtHome: () => ipcRenderer.invoke('shell:openTerminalAtHome')
+    openTerminalAtHome: () => ipcRenderer.invoke('shell:openTerminalAtHome'),
+    runClaudeLogin: () => ipcRenderer.invoke('shell:runClaudeLogin')
   }
 }
 

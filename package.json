@@ -71,6 +71,7 @@
       "resources/**/*",
       "package.json"
     ],
+    "asar": false,
     "mac": {
       "category": "public.app-category.developer-tools",
       "target": [

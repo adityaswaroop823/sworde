@@ -2,7 +2,28 @@ import { app, BrowserWindow, ipcMain, shell, dialog } from 'electron'
 import { join } from 'path'
 import { homedir } from 'os'
 import { promises as fs } from 'fs'
+import { execFile } from 'child_process'
 import Store from 'electron-store'
+
+// When Electron is launched from Finder/Spotlight/Dock on macOS, it inherits a
+// minimal PATH and cannot find user-installed binaries like `claude`. Prepend
+// the common user-bin locations synchronously (no shell spawn — must be fast
+// so the window appears instantly).
+function fixPath(): void {
+  if (process.platform === 'win32') return
+  const extras = [
+    join(homedir(), '.local/bin'),
+    join(homedir(), '.bun/bin'),
+    join(homedir(), '.npm-global/bin'),
+    join(homedir(), 'bin'),
+    '/opt/homebrew/bin',
+    '/opt/homebrew/sbin',
+    '/usr/local/bin'
+  ]
+  process.env.PATH = [...extras, process.env.PATH || ''].filter(Boolean).join(':')
+}
+
+fixPath()
 
 type StoreSchema = {
   apiKey?: string
@@ -128,9 +149,21 @@ ipcMain.handle('conversations:load', () => readConversations())
 ipcMain.handle('conversations:save', (_e, list: unknown[]) => writeConversations(list))
 
 // ─── Auth probe ────────────────────────────────────────────────────────────
+const AUTH_LOG = join(SWORDE_DIR, 'auth-debug.log')
+async function logAuth(line: string) {
+  try {
+    await ensureDirs()
+    await fs.appendFile(AUTH_LOG, `[${new Date().toISOString()}] ${line}\n`, 'utf-8')
+  } catch {
+    // ignore
+  }
+}
+
 ipcMain.handle('auth:probe', async () => {
   const apiKey = store.get('apiKey')
   if (apiKey) process.env.ANTHROPIC_API_KEY = apiKey
+
+  await logAuth(`probe start — PATH=${process.env.PATH?.slice(0, 200)}... HOME=${process.env.HOME} hasApiKey=${Boolean(apiKey)}`)
 
   try {
     const { query } = await getSdk()
@@ -146,6 +179,7 @@ ipcMain.handle('auth:probe', async () => {
     })
 
     for await (const msg of q) {
+      await logAuth(`msg type=${msg.type} subtype=${(msg as { subtype?: string }).subtype ?? ''} error=${(msg as { error?: string }).error ?? ''}`)
       if (msg.type === 'assistant') {
         if (msg.error === 'authentication_failed' || msg.error === 'oauth_org_not_allowed') {
           return { ok: false, reason: 'unauthenticated' as const }
@@ -159,9 +193,12 @@ ipcMain.handle('auth:probe', async () => {
         return { ok: false, reason: 'unauthenticated' as const }
       }
     }
+    await logAuth('probe done — no terminal message received')
     return { ok: false, reason: 'no_response' as const }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
+    const stack = err instanceof Error ? err.stack : ''
+    await logAuth(`probe threw: ${message}\n${stack}`)
     if (/auth|unauthor|401|403|login/i.test(message)) {
       return { ok: false, reason: 'unauthenticated' as const, message }
     }
@@ -430,4 +467,23 @@ ipcMain.handle('shell:openTerminalAtHome', () => {
     return shell.openPath('/System/Applications/Utilities/Terminal.app')
   }
   return null
+})
+
+// Open Terminal, bring it to front, and run `claude login` in a fresh window.
+ipcMain.handle('shell:runClaudeLogin', async () => {
+  if (process.platform !== 'darwin') {
+    return shell.openPath('/System/Applications/Utilities/Terminal.app')
+  }
+  const script = `
+    tell application "Terminal"
+      activate
+      do script "clear; echo '── Sworde: signing you into Claude ──'; claude login; echo; echo 'Done. Switch back to Sworde and click \\"Recheck — I just signed in\\".'"
+    end tell
+  `
+  return new Promise<void>((resolve, reject) => {
+    execFile('/usr/bin/osascript', ['-e', script], (err) => {
+      if (err) reject(err)
+      else resolve()
+    })
+  })
 })
