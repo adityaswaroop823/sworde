@@ -1,9 +1,9 @@
-# sworde
+# swordeapp
 
 Open-source Claude desktop client. One-command install via npm — works on **macOS** and **Windows**.
 
 ```bash
-npm install -g sworde
+npm install -g swordeapp
 sworde
 ```
 
