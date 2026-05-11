@@ -95,6 +95,22 @@ const api = {
     openExternal: (url: string) => ipcRenderer.invoke('shell:openExternal', url),
     openTerminalAtHome: () => ipcRenderer.invoke('shell:openTerminalAtHome'),
     runClaudeLogin: () => ipcRenderer.invoke('shell:runClaudeLogin')
+  },
+  news: {
+    latest: () =>
+      ipcRenderer.invoke('news:latest') as Promise<
+        Array<{
+          title: string
+          url: string
+          source: string
+          domain: string
+          author: string
+          points: number
+          comments: number
+          ageHours: number
+          excerpt: string
+        }>
+      >
   }
 }
 

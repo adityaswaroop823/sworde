@@ -487,3 +487,103 @@ ipcMain.handle('shell:runClaudeLogin', async () => {
     })
   })
 })
+
+// ─── AI news ticker (HackerNews source) ───────────────────────────────────
+type NewsItem = {
+  title: string
+  url: string
+  source: string
+  domain: string
+  author: string
+  points: number
+  comments: number
+  ageHours: number
+  excerpt: string
+}
+
+let newsCache: { fetchedAt: number; items: NewsItem[] } = { fetchedAt: 0, items: [] }
+const NEWS_TTL_MS = 10 * 60 * 1000
+
+async function fetchAiNews(): Promise<NewsItem[]> {
+  // HN Algolia: stories from last 48h with AI-ish keywords, sorted by score
+  const keywords = [
+    'AI',
+    'LLM',
+    'GPT',
+    'Claude',
+    'Anthropic',
+    'OpenAI',
+    'Gemini',
+    'agent',
+    'AGI',
+    'transformer'
+  ]
+  const since = Math.floor(Date.now() / 1000) - 48 * 3600
+  const queries = keywords.map((q) =>
+    `https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(q)}&tags=story&numericFilters=created_at_i>${since},points>30&hitsPerPage=15`
+  )
+
+  const results = await Promise.allSettled(
+    queries.map((u) =>
+      fetch(u, { signal: AbortSignal.timeout(8000) }).then((r) => r.json() as Promise<{
+        hits: Array<{
+          objectID: string
+          title: string
+          url?: string
+          author?: string
+          story_text?: string
+          points: number
+          num_comments: number
+          created_at_i: number
+        }>
+      }>)
+    )
+  )
+
+  const seen = new Set<string>()
+  const items: NewsItem[] = []
+  for (const r of results) {
+    if (r.status !== 'fulfilled') continue
+    for (const h of r.value.hits || []) {
+      if (!h.title || seen.has(h.objectID)) continue
+      seen.add(h.objectID)
+      const url = h.url || `https://news.ycombinator.com/item?id=${h.objectID}`
+      let domain = 'news.ycombinator.com'
+      try {
+        domain = new URL(url).hostname.replace(/^www\./, '')
+      } catch {
+        // keep default
+      }
+      const rawExcerpt = (h.story_text || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+      items.push({
+        title: h.title,
+        url,
+        source: 'HN',
+        domain,
+        author: h.author || '',
+        points: h.points || 0,
+        comments: h.num_comments || 0,
+        ageHours: Math.max(0, Math.round((Date.now() / 1000 - h.created_at_i) / 3600)),
+        excerpt: rawExcerpt.slice(0, 180)
+      })
+    }
+  }
+  items.sort((a, b) => b.points - a.points)
+  return items.slice(0, 25)
+}
+
+ipcMain.handle('news:latest', async () => {
+  const now = Date.now()
+  if (newsCache.items.length > 0 && now - newsCache.fetchedAt < NEWS_TTL_MS) {
+    return newsCache.items
+  }
+  try {
+    const items = await fetchAiNews()
+    if (items.length > 0) {
+      newsCache = { fetchedAt: now, items }
+    }
+    return newsCache.items
+  } catch {
+    return newsCache.items
+  }
+})

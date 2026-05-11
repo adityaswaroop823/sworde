@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Sidebar from './Sidebar'
 import ChatView from './ChatView'
 import SettingsModal from './SettingsModal'
+import NewsBanner from './NewsBanner'
 import type { Conversation } from '../types'
 
 export default function ChatShell() {
@@ -96,6 +97,7 @@ export default function ChatShell() {
         onOpenSettings={() => setSettingsOpen(true)}
       />
       <div className="flex-1 flex flex-col min-w-0">
+        <NewsBanner />
         <ChatView active={active} mode={mode} onUpsert={upsertConversation} />
       </div>
       <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
