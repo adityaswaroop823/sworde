@@ -1,6 +1,6 @@
 {
   "name": "sworde",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Open source Claude desktop. Bring your own key.",
   "main": "./out/main/index.js",
   "author": "Aditya Swaroop",
@@ -76,17 +76,26 @@
       "category": "public.app-category.developer-tools",
       "target": [
         "dmg"
-      ]
+      ],
+      "artifactName": "Sworde-${version}-mac-${arch}.${ext}"
     },
     "win": {
       "target": [
-        "nsis"
-      ]
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "artifactName": "Sworde-Setup-${version}-win-${arch}.${ext}"
     },
     "linux": {
       "target": [
         "AppImage"
-      ]
+      ],
+      "artifactName": "Sworde-${version}-linux-${arch}.${ext}"
     }
   }
 }
